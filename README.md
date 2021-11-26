@@ -1,2 +1,2 @@
-# pygame_mentor_examples
+# PyGame Mentor Examples
 PyGame examples for mentors only.
