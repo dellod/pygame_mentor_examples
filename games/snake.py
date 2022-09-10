@@ -36,7 +36,11 @@ X_UPDATE        = 0
 Y_UPDATE        = 0
 
 ### FUNCTIONS
+def create_message(message: str, colour: tuple) -> None:
+    pass
+
 def main() -> None:
+    print(type(RED))
     """Main entry point for program"""
     # Declare globals that will be used in function
     global X_POS, Y_POS, X_UPDATE, Y_UPDATE
@@ -80,7 +84,11 @@ def main() -> None:
                     X_UPDATE = NO_MOVEMENT
                     Y_UPDATE = MOVEMENT_SIZE
 
-        # 2. Update Display
+        # 2. Check conditions
+        if X_POS > SCREEN_WIDTH or X_POS < 0 or Y_POS > SCREEN_HEIGHT or Y_POS < 0:
+            is_game_over = True
+
+        # 3. Update Display
         X_POS += X_UPDATE
         Y_POS += Y_UPDATE
         display.fill(BLACK)
