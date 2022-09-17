@@ -9,6 +9,7 @@
 ####################################################################################################
 
 # IMPORTS
+from venv import create
 import pygame
 import sys
 
@@ -36,11 +37,19 @@ X_UPDATE        = 0
 Y_UPDATE        = 0
 
 ### FUNCTIONS
-def create_message(message: str, colour: tuple) -> None:
-    pass
+def create_message(message: str,
+                   colour: tuple,
+                   x_pos: float,
+                   y_pos: float,
+                   display: pygame.Surface,
+                   font_style: pygame.font.Font,
+                  ) -> None:
+    """Writes message to display window given the colour and position."""
+    msg = font_style.render(message, True, colour)
+    display.blit(msg, [x_pos, y_pos])
+
 
 def main() -> None:
-    print(type(RED))
     """Main entry point for program"""
     # Declare globals that will be used in function
     global X_POS, Y_POS, X_UPDATE, Y_UPDATE
@@ -55,8 +64,15 @@ def main() -> None:
     pygame.display.update()
     pygame.display.set_caption("Snake Game")
 
-    # Game over checker variable
+    # Set up font style
+    font_style = pygame.font.SysFont(None, 50)
+
+    # Important info variables
+    score = 0
+
+    # Important flag variables for checking states
     is_game_over = False
+    did_player_lose = False
 
     # Game loop - loop until the user quits the game
     while not is_game_over:
@@ -86,13 +102,26 @@ def main() -> None:
 
         # 2. Check conditions
         if X_POS > SCREEN_WIDTH or X_POS < 0 or Y_POS > SCREEN_HEIGHT or Y_POS < 0:
-            is_game_over = True
+            did_player_lose = True
 
         # 3. Update Display
-        X_POS += X_UPDATE
-        Y_POS += Y_UPDATE
+        # Draw background
         display.fill(BLACK)
+
+        # Draw scoreboard
+        score_message = "Score: " + str(score)
+        create_message(score_message, WHITE, 10, 10, display, font_style)
+
+        # Draw snake
         pygame.draw.rect(display, GREEN, [X_POS, Y_POS, SNAKE_SIZE[0], SNAKE_SIZE[1]])
+
+        # Check if player lost
+        if did_player_lose:
+            create_message("You lost!", RED, SCREEN_WIDTH/2 - 50, SCREEN_HEIGHT/2, display, font_style)
+            # TODO: They have to press a key here to restart the game
+        else:
+            X_POS += X_UPDATE
+            Y_POS += Y_UPDATE
         pygame.display.update()
         clock.tick(CLOCK_TICK_SPEED)
 
