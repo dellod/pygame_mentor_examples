@@ -9,8 +9,8 @@
 ####################################################################################################
 
 # IMPORTS
-from venv import create
 import pygame
+import random
 import sys
 
 ### GLOBALS
@@ -42,11 +42,24 @@ def create_message(message: str,
                    x_pos: float,
                    y_pos: float,
                    display: pygame.Surface,
-                   font_style: pygame.font.Font,
-                  ) -> None:
+                   font_style: pygame.font.Font) -> None:
     """Writes message to display window given the colour and position."""
     msg = font_style.render(message, True, colour)
     display.blit(msg, [x_pos, y_pos])
+
+
+def generate_random_food_position() -> tuple:
+    food_pos = \
+        (round(random.randrange(0, SCREEN_WIDTH - SNAKE_SIZE[0]) / SNAKE_SIZE[0]) * SNAKE_SIZE[0],
+         round(random.randrange(0, SCREEN_HEIGHT - SNAKE_SIZE[1]) / SNAKE_SIZE[1]) * SNAKE_SIZE[1])
+    return food_pos
+
+
+def check_grid_collision(snake_pos: tuple, food_pos: tuple):
+    if snake_pos[0] == food_pos[0] and snake_pos[1] == food_pos[1]:
+        return True
+    else:
+        return False
 
 
 def main() -> None:
@@ -66,6 +79,9 @@ def main() -> None:
 
     # Set up font style
     font_style = pygame.font.SysFont(None, 50)
+
+    # Food variables
+    food_pos = generate_random_food_position()
 
     # Important info variables
     score = 0
@@ -114,6 +130,17 @@ def main() -> None:
 
         # Draw snake
         pygame.draw.rect(display, GREEN, [X_POS, Y_POS, SNAKE_SIZE[0], SNAKE_SIZE[1]])
+
+        # Draw food
+        pygame.draw.rect(display, RED, [food_pos[0], food_pos[1], SNAKE_SIZE[0], SNAKE_SIZE[1]])
+
+        # Check if snake is on top of food
+        if check_grid_collision((X_POS, Y_POS), food_pos):
+            score += 1
+            food_pos = generate_random_food_position()
+
+        # Increase length of snake
+        # TODO
 
         # Check if player lost
         if did_player_lose:
