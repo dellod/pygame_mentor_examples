@@ -4,17 +4,14 @@
 # Daryl Dang
 
 # IMPORTS
-import pygame
 import sys
+from game import Game
+
 
 def main() -> None:
-    """Main entry point for program"""
-    # Initialize pygame window
-    pygame.init()
-
-    # Close and clean up
-    pygame.quit()
-    quit()
+    game = Game()
+    game.run()
+    game.close()
 
 
 # ENTRY POINT
